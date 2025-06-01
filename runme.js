@@ -223,12 +223,19 @@ async function main() {
     await createProducts(db);
     await createStores(db);
     await createIndexes(db);
-    for (let i = 0; i < 50; i++) {
-      console.log(`Inserting batch ${i + 1} of orders...`);
-      await createOrders(db); // Wait for orders creation to finish in each iteration
-      console.log(`Finished batch ${i + 1}. Running some queries...`);
-      await runSomeQueries(db);
-    }
+for (let i = 0; i < 50; i++) {    
+      console.log(`Inserting batch ${i + 1} of orders...`);  
+      // Start timing the batch  
+      const startBatchInsert = Date.now();  
+      await createOrders(db); // Wait for orders creation to finish in each iteration    
+      // End timing the batch  
+      const endBatchInsert = Date.now();  
+      const elapsedBatchTime = endBatchInsert - startBatchInsert;  
+      console.log(`Finished batch ${i + 1} insertion. Elapsed time: ${elapsedBatchTime} ms`);  
+      // Run queries after each batch  to show time with larger collection
+      console.log('Running some queries...');  
+      await runSomeQueries(db);    
+    }    
     console.log('All tasks completed successfully!');
   } catch (err) {
     console.error(`An error occurred: ${err.message}`);
