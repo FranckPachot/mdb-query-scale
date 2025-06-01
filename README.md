@@ -42,6 +42,8 @@ db.orders.estimatedDocumentCount();
 ```
 
 ## Example of output:
+
+I've run the following on a small lab:
 ```
 
 [mlab data]# npm install @faker-js/faker
