@@ -170,7 +170,6 @@ async function createIndexes(db) {
 }
 
 async function runSomeQueries(db) {
-  console.log("Running queries...");
 
   console.log(`Running Query 1: Find last order by customer email`);
   const startQuery1 = Date.now(); // Start timer for query 2
@@ -219,7 +218,7 @@ async function main() {
     await createProducts(db);
     await createStores(db);
     await createIndexes(db);
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 50; i++) {
       console.log(`Inserting batch ${i + 1} of orders...`);
       await createOrders(db); // Wait for orders creation to finish in each iteration
       console.log(`Finished batch ${i + 1}. Running some queries...`);
