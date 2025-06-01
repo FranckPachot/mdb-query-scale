@@ -6,7 +6,7 @@ Example:
 
 [mlab data]# npm install @faker-js/faker
 
-[mlab data]# mongosh -f orders.js
+[mlab data]# mongosh -f runme.js
 
 Creating customers...
 Inserted 10000 customers.
