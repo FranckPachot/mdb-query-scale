@@ -1,7 +1,12 @@
 
 
 /*
+Requires:
+
 npm install @faker-js/faker
+
+Inspired by Josh Smith data loader https://github.com/jesmith17/rdbms_comparator/blob/main/data/data_loader.py
+
 */
 
 
