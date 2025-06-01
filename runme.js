@@ -105,9 +105,9 @@ async function createStores(db) {
 
 async function createOrders(db) {
   console.log('Creating orders...');
-  const customers = await db.customers.find({}, { projection: { phones: 0, emails: 0 } }).toArray();
+  const customers = await db.customers.find({}, { phones: 0, emails: 0 }).toArray();
   const products = await db.products.find({}).toArray();
-  const stores = await db.stores.find({}, { projection: { address: 0 } }).toArray();
+  const stores = await db.stores.find({}, { address: 0 }).toArray();
 
   let orders = [];
   for (let i = 0; i < 50000; i++) {
