@@ -1,7 +1,47 @@
-# mdb-query-scale
-Run some basic queries while the collection grows to test the scalability of MongoDB queries. In OLTP, the response time must be proportional to the result, not to the size of the database.
+# MongoDB Query Scalability Test
 
-Example:
+The primary objective of this test is to assess how effectively MongoDB handles query performance as the collection size increases, simulating an Online Transaction Processing (OLTP) workload. In OLTP scenarios, response times should be proportional to the size of the query result, not the entire collection. This benchmark showcases MongoDB's capability to utilize indexes efficiently, ensuring fast queries even with large datasets. You are encouraged to run it on other MongoDB "compatible" databases, because they may not have the same indexing capabilities as MongoDB.
+
+The test uses a document model inspired by Josh Smith's [RDBMS Comparator](https://github.com/jesmith17/rdbms_comparator), a Spring-Boot app running on MongoDB and PostgreSQL databases to compare the queries generated. It is an order-entry application (schema [here](https://jesmith17.github.io/rdbms_comparator/assets/images/mongo_schema-c22d8663e195075707c9b5d79ed1f0ac.png)).
+
+The `runme.js` initializes the collections and indexes and runs several times the following:
+- insert new orders
+- run a few queries
+it displays the elapsed time.
+
+The queries are:
+- Query 1: Find the last order by a unique customer email.
+```
+db.orders.find({
+    "customer.emails.email": "Russ51@hotmail.com",
+  })
+    .sort({
+      "orderDate": -1
+    })
+    .limit(10)
+```
+It uses the following index: `{ "orderStatus": 1, "shippingStatus": 1, "details.product.name": 1,  "deliveryDate": -1 }`
+
+- Query 2: Find the last delivered orders for specified products.
+```
+db.orders.find({
+    "orderStatus": "Shipped",
+    "shippingStatus": "Delivered",
+    "details.product.name": { $in: [ "Mango Pie", "Lemon Pie", "Orange Pie", "Apple Pie" ] },
+  })
+    .sort({
+      "deliveryDate": -1
+    })
+    .limit(10)
+```
+It uses the following index: `{ "customer.emails.email": 1, "orderDate": -1 }`
+
+- Query 3: Estimated count of orders.
+```
+db.orders.estimatedDocumentCount();
+```
+
+## Example of output:
 ```
 
 [mlab data]# npm install @faker-js/faker
@@ -182,4 +222,4 @@ Running Query 3: Estimated count of orders
 
 As the collection size increases, the response time of the queries remains consistent. This validates that the indexes are correctly addressing the query access patterns.
 
-If you run it on other databases that claim MongoDB compatibility, please share the result (create an issue). Examples: Amazon DocumentDB, Azure CosmosDB, Oracle ORDS, FerretDB, Percona, Google Firestore.
+If you run it on other databases that claim MongoDB compatibility, please share the result (create an issue). Examples: Amazon DocumentDB, Azure CosmosDB, Oracle ORDS, FerretDB, Percona, Google Firestore. As they are an emulation of the MongoDB API on top of a non-document database, they don't have the same indexing capabilities.
